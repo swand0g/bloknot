@@ -31,27 +31,31 @@ import java.util.List;
  */
 public class ItemListActivity extends AppCompatActivity {
 
+    SimpleItemRecyclerViewAdapter recyclerViewAdapter;
+
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
      * device.
      */
     private boolean mTwoPane;
 
+    FloatingActionButton createNewTask;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_list);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        createNewTask = findViewById(R.id.create_new_task);
+        createNewTask.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                goToTaskCreationActivity(view);
+                System.out.println("lol");
             }
         });
 
@@ -68,8 +72,20 @@ public class ItemListActivity extends AppCompatActivity {
         setupRecyclerView((RecyclerView) recyclerView);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        recyclerViewAdapter.notifyDataSetChanged();
+    }
+
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, TaskContent.TASKS, mTwoPane));
+        recyclerViewAdapter = new SimpleItemRecyclerViewAdapter(this, TaskContent.TASKS, mTwoPane);
+        recyclerView.setAdapter(recyclerViewAdapter);
+    }
+
+    public void goToTaskCreationActivity(View view) {
+        Intent intent = new Intent(this, TaskCreation.class);
+        startActivity(intent);
     }
 
     @SuppressWarnings("JavaDoc")
@@ -89,7 +105,7 @@ public class ItemListActivity extends AppCompatActivity {
                 Task item = (Task) view.getTag();
                 if (mTwoPane) {
                     Bundle arguments = new Bundle();
-                    arguments.putString(ItemDetailFragment.ARG_ITEM_ID, item.id);
+                    arguments.putInt(ItemDetailFragment.ARG_ITEM_ID, item.id);
                     ItemDetailFragment fragment = new ItemDetailFragment();
                     fragment.setArguments(arguments);
                     parentActivity.getSupportFragmentManager().beginTransaction()
@@ -99,7 +115,6 @@ public class ItemListActivity extends AppCompatActivity {
                     Context context = view.getContext();
                     Intent intent = new Intent(context, ItemDetailActivity.class);
                     intent.putExtra(ItemDetailFragment.ARG_ITEM_ID, item.id);
-
                     context.startActivity(intent);
                 }
             }
@@ -117,6 +132,7 @@ public class ItemListActivity extends AppCompatActivity {
             mTwoPane = twoPane;
         }
 
+        @NonNull
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_list_content, parent, false);
@@ -126,7 +142,7 @@ public class ItemListActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
 
-            holder.idView.setText(values.get(position).id);
+            holder.idView.setText(String.valueOf(values.get(position).id));
             holder.contentView.setText(values.get(position).name);
             holder.itemView.setTag(values.get(position));
             holder.itemView.setOnClickListener(mOnClickListener);
@@ -138,7 +154,7 @@ public class ItemListActivity extends AppCompatActivity {
             return values.size();
         }
 
-        public void removeAt(int position) {
+        private void removeAt(int position) {
             values.remove(position);
             notifyItemRemoved(position);
             notifyItemRangeChanged(position, values.size());
@@ -152,8 +168,8 @@ public class ItemListActivity extends AppCompatActivity {
 
             ViewHolder(View view) {
                 super(view);
-                idView = (TextView) view.findViewById(R.id.id_text);
-                contentView = (TextView) view.findViewById(R.id.content);
+                idView = view.findViewById(R.id.id_text);
+                contentView = view.findViewById(R.id.content);
                 checkBox = view.findViewById(R.id.check_box);
 
                 checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {

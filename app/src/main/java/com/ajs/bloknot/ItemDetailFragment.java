@@ -12,6 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.Objects;
+
 /**
  * A fragment representing a single Item detail screen.
  * This fragment is either contained in a {@link ItemListActivity}
@@ -25,9 +27,6 @@ public class ItemDetailFragment extends Fragment {
      */
     public static final String ARG_ITEM_ID = "item_id";
 
-    /**
-     * The dummy content this fragment is presenting.
-     */
     private Task task;
 
     /**
@@ -39,18 +38,20 @@ public class ItemDetailFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null && getArguments().containsKey(ARG_ITEM_ID)) {
 
-            task = TaskContent.TASK_MAP.get(getArguments().getString(ARG_ITEM_ID));
-
+            task = TaskContent.TASK_MAP.get(Objects.requireNonNull(Objects.requireNonNull(getActivity()).getIntent().getExtras()).getInt(ARG_ITEM_ID));
             Activity activity = this.getActivity();
-            CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
+            CollapsingToolbarLayout appBarLayout = activity.findViewById(R.id.toolbar_layout);
             if (appBarLayout != null) {
                 appBarLayout.setTitle(task.name);
             }
+
         }
+
     }
 
     @Override
