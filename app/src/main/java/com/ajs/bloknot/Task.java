@@ -6,13 +6,13 @@ public class Task {
 
     public String name;
     public String id;
-    public String additionalInfo;
+    public String details;
     public Date date;
 
-    public Task(String name, String id, String additionalInfo, Date date) {
+    public Task(String name, String id, String details, Date date) {
         this.name = name;
         this.id = id;
-        this.additionalInfo = additionalInfo;
+        this.details = details;
         this.date = date;
     }
 

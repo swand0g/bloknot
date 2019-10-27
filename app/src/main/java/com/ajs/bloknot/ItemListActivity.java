@@ -15,9 +15,9 @@ import com.google.android.material.snackbar.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
-
-import com.ajs.bloknot.dummy.DummyContent;
 
 import java.util.List;
 
@@ -75,10 +75,10 @@ public class ItemListActivity extends AppCompatActivity {
     @SuppressWarnings("JavaDoc")
     public static class SimpleItemRecyclerViewAdapter extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
 
-        private final ItemListActivity mParentActivity;
+        private final ItemListActivity parentActivity;
 
         // The content of this RecyclerView.
-        private final List<Task> mValues;
+        private final List<Task> values;
 
         // Boolean indicating if the screen size is large enough for a two-pane system.
         private final boolean mTwoPane;
@@ -92,7 +92,7 @@ public class ItemListActivity extends AppCompatActivity {
                     arguments.putString(ItemDetailFragment.ARG_ITEM_ID, item.id);
                     ItemDetailFragment fragment = new ItemDetailFragment();
                     fragment.setArguments(arguments);
-                    mParentActivity.getSupportFragmentManager().beginTransaction()
+                    parentActivity.getSupportFragmentManager().beginTransaction()
                             .replace(R.id.item_detail_container, fragment)
                             .commit();
                 } else {
@@ -112,8 +112,8 @@ public class ItemListActivity extends AppCompatActivity {
          * @param twoPane
          */
         SimpleItemRecyclerViewAdapter(ItemListActivity parent, List<Task> items, boolean twoPane) {
-            mValues = items;
-            mParentActivity = parent;
+            values = items;
+            parentActivity = parent;
             mTwoPane = twoPane;
         }
 
@@ -125,27 +125,43 @@ public class ItemListActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
-//            holder.mIdView.setText(mValues.get(position).id);
-            holder.mIdView.setText("F");
-            holder.mContentView.setText(mValues.get(position).additionalInfo);
 
-            holder.itemView.setTag(mValues.get(position));
+            holder.idView.setText(values.get(position).id);
+            holder.contentView.setText(values.get(position).name);
+            holder.itemView.setTag(values.get(position));
             holder.itemView.setOnClickListener(mOnClickListener);
+
         }
 
         @Override
         public int getItemCount() {
-            return mValues.size();
+            return values.size();
+        }
+
+        public void removeAt(int position) {
+            values.remove(position);
+            notifyItemRemoved(position);
+            notifyItemRangeChanged(position, values.size());
         }
 
         class ViewHolder extends RecyclerView.ViewHolder {
-            final TextView mIdView;
-            final TextView mContentView;
+
+            final TextView idView;
+            final TextView contentView;
+            final CheckBox checkBox;
 
             ViewHolder(View view) {
                 super(view);
-                mIdView = (TextView) view.findViewById(R.id.id_text);
-                mContentView = (TextView) view.findViewById(R.id.content);
+                idView = (TextView) view.findViewById(R.id.id_text);
+                contentView = (TextView) view.findViewById(R.id.content);
+                checkBox = view.findViewById(R.id.check_box);
+
+                checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                        removeAt(getAdapterPosition());
+                    }
+                });
             }
         }
     }

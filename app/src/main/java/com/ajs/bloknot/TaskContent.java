@@ -15,9 +15,8 @@ public class TaskContent {
     private static final int COUNT = 25;
     static {
         // Add some sample items.
-        for (int i = 1; i <= COUNT; i++) {
-            addTask(createDummyItem("A Task", String.valueOf(i), "Some additional info", new Date()));
-        }
+        addTask(createDummyItem("Shoping", "1", "Buy dairy products", new Date()));
+        addTask(createDummyItem("Homework", "2", "Math homework", new Date()));
     }
 
     private static void addTask(Task task) {
