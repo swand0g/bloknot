@@ -1,5 +1,7 @@
 package com.ajs.bloknot;
 
+import android.annotation.SuppressLint;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -10,6 +12,7 @@ class TaskContent {
 
     static final List<Task> TASKS = new ArrayList<>();
 
+    @SuppressLint("UseSparseArrays")
     static final Map<Integer, Task> TASK_MAP = new HashMap<>();
 
     static {

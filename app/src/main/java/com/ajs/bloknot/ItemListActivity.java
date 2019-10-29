@@ -3,21 +3,18 @@ package com.ajs.bloknot;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.Toolbar;
-
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
 
 import java.util.List;
 
@@ -31,6 +28,8 @@ import java.util.List;
  */
 public class ItemListActivity extends AppCompatActivity {
 
+    TaskDao taskDao;
+
     SimpleItemRecyclerViewAdapter recyclerViewAdapter;
 
     /**
@@ -38,8 +37,6 @@ public class ItemListActivity extends AppCompatActivity {
      * device.
      */
     private boolean mTwoPane;
-
-    FloatingActionButton createNewTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,15 +47,6 @@ public class ItemListActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
 
-        createNewTask = findViewById(R.id.create_new_task);
-        createNewTask.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                goToTaskCreationActivity(view);
-                System.out.println("lol");
-            }
-        });
-
         if (findViewById(R.id.item_detail_container) != null) {
             // The detail container view will be present only in the
             // large-screen layouts (res/values-w900dp).
@@ -67,9 +55,15 @@ public class ItemListActivity extends AppCompatActivity {
             mTwoPane = true;
         }
 
+        // Setup database.
+        AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "db").build();
+        db.taskDao();
+
+        // Setup RecyclerView.
         View recyclerView = findViewById(R.id.item_list);
         assert recyclerView != null;
         setupRecyclerView((RecyclerView) recyclerView);
+
     }
 
     @Override
@@ -154,7 +148,7 @@ public class ItemListActivity extends AppCompatActivity {
             return values.size();
         }
 
-        private void removeAt(int position) {
+        public void removeAt(int position) {
             values.remove(position);
             notifyItemRemoved(position);
             notifyItemRangeChanged(position, values.size());
