@@ -65,15 +65,3 @@ fastlane/test_output
 fastlane/readme.md
 
 .DS_Store
-app/build.gradle
-.idea/codeStyles/Project.xml
-.idea/misc.xml
-.idea/modules.xml
-.idea/runConfigurations.xml
-.idea/vcs.xml
-*.gradle
-gradle.properties
-gradle/wrapper/gradle-wrapper.jar
-gradle/wrapper/gradle-wrapper.properties
-gradlew
-gradlew.bat
