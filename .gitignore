@@ -65,4 +65,7 @@ fastlane/screenshots
 fastlane/test_output
 fastlane/readme.md
 
+# Other
 .DS_Store
+app/src/androidTest/
+app/src/test/
