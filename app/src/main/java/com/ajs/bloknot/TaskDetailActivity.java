@@ -3,9 +3,6 @@ package com.ajs.bloknot;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-
 import androidx.appcompat.widget.Toolbar;
 
 import android.util.Log;
@@ -18,20 +15,20 @@ import android.view.MenuItem;
 
 import java.util.Objects;
 
-import static com.ajs.bloknot.ItemDetailFragment.ARG_ITEM_ID;
+import static com.ajs.bloknot.TaskDetailFragment.ARG_ITEM_ID;
 
 /**
  * An activity representing a single Item detail screen. This
  * activity is only used on narrow width devices. On tablet-size devices,
  * item details are presented side-by-side with a list of items
- * in a {@link ItemListActivity}.
+ * in a {@link TaskListActivity}.
  */
-public class ItemDetailActivity extends AppCompatActivity {
+public class TaskDetailActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_item_detail);
+        setContentView(R.layout.activity_task_detail);
         Toolbar toolbar = findViewById(R.id.detail_toolbar);
         setSupportActionBar(toolbar);
 
@@ -56,7 +53,7 @@ public class ItemDetailActivity extends AppCompatActivity {
             Bundle arguments = new Bundle();
             arguments.putString(ARG_ITEM_ID,
                     getIntent().getStringExtra(ARG_ITEM_ID));
-            ItemDetailFragment fragment = new ItemDetailFragment();
+            TaskDetailFragment fragment = new TaskDetailFragment();
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.item_detail_container, fragment)
@@ -75,7 +72,7 @@ public class ItemDetailActivity extends AppCompatActivity {
             //
             // http://developer.android.com/design/patterns/navigation.html#up-vs-back
             //
-            navigateUpTo(new Intent(this, ItemListActivity.class));
+            navigateUpTo(new Intent(this, TaskListActivity.class));
             return true;
         }
         return super.onOptionsItemSelected(item);

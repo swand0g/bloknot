@@ -14,7 +14,7 @@
             android:label="@string/title_activity_task_creation"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
-            android:name=".ItemListActivity"
+            android:name=".TaskListActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -24,13 +24,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ItemDetailActivity"
+            android:name=".TaskDetailActivity"
             android:label="@string/title_item_detail"
-            android:parentActivityName=".ItemListActivity"
+            android:parentActivityName=".TaskListActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.ajs.bloknot.ItemListActivity" />
+                android:value="com.ajs.bloknot.TaskListActivity" />
         </activity>
     </application>
 

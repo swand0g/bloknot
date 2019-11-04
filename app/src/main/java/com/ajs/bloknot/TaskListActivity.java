@@ -22,11 +22,11 @@ import java.util.List;
  * An activity representing a list of Items. This activity
  * has different presentations for handset and tablet-size devices. On
  * handsets, the activity presents a list of items, which when touched,
- * lead to a {@link ItemDetailActivity} representing
+ * lead to a {@link TaskDetailActivity} representing
  * item details. On tablets, the activity presents the list of items and
  * item details side-by-side using two vertical panes.
  */
-public class ItemListActivity extends AppCompatActivity {
+public class TaskListActivity extends AppCompatActivity {
 
     TaskDao taskDao;
 
@@ -41,7 +41,7 @@ public class ItemListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_item_list);
+        setContentView(R.layout.activity_task_list);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -85,7 +85,7 @@ public class ItemListActivity extends AppCompatActivity {
     @SuppressWarnings("JavaDoc")
     public static class SimpleItemRecyclerViewAdapter extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
 
-        private final ItemListActivity parentActivity;
+        private final TaskListActivity parentActivity;
 
         // The content of this RecyclerView.
         private final List<Task> values;
@@ -99,16 +99,16 @@ public class ItemListActivity extends AppCompatActivity {
                 Task item = (Task) view.getTag();
                 if (mTwoPane) {
                     Bundle arguments = new Bundle();
-                    arguments.putInt(ItemDetailFragment.ARG_ITEM_ID, item.id);
-                    ItemDetailFragment fragment = new ItemDetailFragment();
+                    arguments.putInt(TaskDetailFragment.ARG_ITEM_ID, item.id);
+                    TaskDetailFragment fragment = new TaskDetailFragment();
                     fragment.setArguments(arguments);
                     parentActivity.getSupportFragmentManager().beginTransaction()
                             .replace(R.id.item_detail_container, fragment)
                             .commit();
                 } else {
                     Context context = view.getContext();
-                    Intent intent = new Intent(context, ItemDetailActivity.class);
-                    intent.putExtra(ItemDetailFragment.ARG_ITEM_ID, item.id);
+                    Intent intent = new Intent(context, TaskDetailActivity.class);
+                    intent.putExtra(TaskDetailFragment.ARG_ITEM_ID, item.id);
                     context.startActivity(intent);
                 }
             }
@@ -120,7 +120,7 @@ public class ItemListActivity extends AppCompatActivity {
          * @param items
          * @param twoPane
          */
-        SimpleItemRecyclerViewAdapter(ItemListActivity parent, List<Task> items, boolean twoPane) {
+        SimpleItemRecyclerViewAdapter(TaskListActivity parent, List<Task> items, boolean twoPane) {
             values = items;
             parentActivity = parent;
             mTwoPane = twoPane;
@@ -129,7 +129,7 @@ public class ItemListActivity extends AppCompatActivity {
         @NonNull
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_list_content, parent, false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_task_content, parent, false);
             return new ViewHolder(view);
         }
 
