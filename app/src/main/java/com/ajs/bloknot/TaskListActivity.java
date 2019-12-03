@@ -2,6 +2,7 @@ package com.ajs.bloknot;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,8 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -29,7 +32,8 @@ import java.util.List;
 public class TaskListActivity extends AppCompatActivity {
 
     TaskDao taskDao;
-
+    AppDatabase database;
+    List<Task> databaseFetchResult;
     SimpleItemRecyclerViewAdapter recyclerViewAdapter;
 
     /**
@@ -56,8 +60,14 @@ public class TaskListActivity extends AppCompatActivity {
         }
 
         // Setup database.
-        AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "db").build();
-        db.taskDao();
+        database = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "db").build();
+        taskDao = database.taskDao();
+
+        Bundle bundle = getIntent().getExtras();
+        ArrayList<Task> tasks = bundle.getParcelableArrayList("data");
+        for (Task task : tasks) {
+            System.out.println(task.name);
+        }
 
         // Setup RecyclerView.
         View recyclerView = findViewById(R.id.item_list);
@@ -72,6 +82,12 @@ public class TaskListActivity extends AppCompatActivity {
         recyclerViewAdapter.notifyDataSetChanged();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        database.close();
+    }
+
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
         recyclerViewAdapter = new SimpleItemRecyclerViewAdapter(this, TaskContent.TASKS, mTwoPane);
         recyclerView.setAdapter(recyclerViewAdapter);
@@ -80,6 +96,20 @@ public class TaskListActivity extends AppCompatActivity {
     public void goToTaskCreationActivity(View view) {
         Intent intent = new Intent(this, TaskCreation.class);
         startActivity(intent);
+    }
+
+    private void sampleDatabaseProcess() {
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                Task task = new Task("a new task", 1, "no details", new Date());
+                taskDao.insert(task);
+                Task newTask = taskDao.getAll().get(0);
+                System.out.println("Retrieved a Task from DB with name: " + newTask.name);
+                taskDao.delete(task);
+                System.out.println("Removed previously retrieved Task from DB. New DB size: " + taskDao.getAll().size());
+            }
+        });
     }
 
     @SuppressWarnings("JavaDoc")
@@ -129,7 +159,7 @@ public class TaskListActivity extends AppCompatActivity {
         @NonNull
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_task_content, parent, false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.task_list_content, parent, false);
             return new ViewHolder(view);
         }
 
