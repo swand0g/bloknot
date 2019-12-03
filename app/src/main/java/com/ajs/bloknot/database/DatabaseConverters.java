@@ -1,4 +1,4 @@
-package com.ajs.bloknot;
+package com.ajs.bloknot.database;
 
 import androidx.room.TypeConverter;
 

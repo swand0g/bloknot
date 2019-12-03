@@ -1,8 +1,11 @@
-package com.ajs.bloknot;
+package com.ajs.bloknot.database;
 
 import androidx.room.Database;
 import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
+
+import com.ajs.bloknot.Task;
+import com.ajs.bloknot.TaskDao;
 
 @Database(entities = {Task.class}, version = 1)
 @TypeConverters({DatabaseConverters.class})

@@ -17,6 +17,8 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
+import com.ajs.bloknot.database.AppDatabase;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -31,10 +33,10 @@ import java.util.List;
  */
 public class TaskListActivity extends AppCompatActivity {
 
-    TaskDao taskDao;
+    public TaskDao dao;
     AppDatabase database;
-    List<Task> databaseFetchResult;
     SimpleItemRecyclerViewAdapter recyclerViewAdapter;
+    List<Task> tasks;
 
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
@@ -59,20 +61,23 @@ public class TaskListActivity extends AppCompatActivity {
             mTwoPane = true;
         }
 
-        // Setup database.
-        database = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "db").build();
-        taskDao = database.taskDao();
-
+        // Fetch loaded data.
         Bundle bundle = getIntent().getExtras();
-        ArrayList<Task> tasks = bundle.getParcelableArrayList("data");
-        for (Task task : tasks) {
-            System.out.println(task.name);
+        if (bundle != null && bundle.containsKey("data")) {
+            tasks = bundle.getParcelableArrayList("data");
+        } else {
+            tasks = new ArrayList<>();
         }
+        System.out.println(tasks.size());
 
         // Setup RecyclerView.
         View recyclerView = findViewById(R.id.item_list);
         assert recyclerView != null;
         setupRecyclerView((RecyclerView) recyclerView);
+
+        // Setup database.
+        database = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "db").build();
+        dao = database.taskDao();
 
     }
 
@@ -89,7 +94,7 @@ public class TaskListActivity extends AppCompatActivity {
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        recyclerViewAdapter = new SimpleItemRecyclerViewAdapter(this, TaskContent.TASKS, mTwoPane);
+        recyclerViewAdapter = new SimpleItemRecyclerViewAdapter(this, tasks, mTwoPane);
         recyclerView.setAdapter(recyclerViewAdapter);
     }
 
@@ -103,11 +108,11 @@ public class TaskListActivity extends AppCompatActivity {
             @Override
             public void run() {
                 Task task = new Task("a new task", 1, "no details", new Date());
-                taskDao.insert(task);
-                Task newTask = taskDao.getAll().get(0);
+                dao.insert(task);
+                Task newTask = dao.getAll().get(0);
                 System.out.println("Retrieved a Task from DB with name: " + newTask.name);
-                taskDao.delete(task);
-                System.out.println("Removed previously retrieved Task from DB. New DB size: " + taskDao.getAll().size());
+                dao.delete(task);
+                System.out.println("Removed previously retrieved Task from DB. New DB size: " + dao.getAll().size());
             }
         });
     }
@@ -141,6 +146,8 @@ public class TaskListActivity extends AppCompatActivity {
                     intent.putExtra(TaskDetailFragment.ARG_ITEM_ID, item.id);
                     context.startActivity(intent);
                 }
+
+
             }
         };
 
@@ -203,6 +210,9 @@ public class TaskListActivity extends AppCompatActivity {
                     }
                 });
             }
+
         }
+
     }
+
 }
