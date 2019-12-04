@@ -12,12 +12,16 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
 import com.ajs.bloknot.database.AppDatabase;
+import com.ajs.bloknot.database.DatabaseDelete.DbDeleteInterface;
+import com.ajs.bloknot.database.DatabaseFetch.DbFetchInterface;
+import com.ajs.bloknot.database.DatabaseInsert.DbInsertInterface;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -31,12 +35,19 @@ import java.util.List;
  * item details. On tablets, the activity presents the list of items and
  * item details side-by-side using two vertical panes.
  */
-public class TaskListActivity extends AppCompatActivity {
+public class TaskListActivity extends AppCompatActivity implements DbFetchInterface, DbInsertInterface, DbDeleteInterface {
 
     public TaskDao dao;
     AppDatabase database;
     SimpleItemRecyclerViewAdapter recyclerViewAdapter;
-    List<Task> tasks;
+    ArrayList<Task> tasks;
+
+    // TODO: Formalize as resource
+    public static final int CREATE_TASK = 0001;
+    public static final String TASK_LIST = "taskList";
+    public static final String NEXT_TASK_ID = "nextTaskId";
+    public static final String NEW_TASK = "newTask";
+    public static final String TASK_FOR_DETAIL_VIEW = "taskForDetailView";
 
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
@@ -63,12 +74,11 @@ public class TaskListActivity extends AppCompatActivity {
 
         // Fetch loaded data.
         Bundle bundle = getIntent().getExtras();
-        if (bundle != null && bundle.containsKey("data")) {
-            tasks = bundle.getParcelableArrayList("data");
+        if (bundle != null && bundle.containsKey(TASK_LIST)) {
+            tasks = bundle.getParcelableArrayList(TASK_LIST);
         } else {
             tasks = new ArrayList<>();
         }
-        System.out.println(tasks.size());
 
         // Setup RecyclerView.
         View recyclerView = findViewById(R.id.item_list);
@@ -84,6 +94,11 @@ public class TaskListActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        System.out.println("OUTPUTTING AFTER RESUME");
+        for (Task t: tasks) {
+            System.out.println(t);
+        }
+        System.out.println("DONE WITH OUTPUTTING AFTER RESUME");
         recyclerViewAdapter.notifyDataSetChanged();
     }
 
@@ -100,7 +115,51 @@ public class TaskListActivity extends AppCompatActivity {
 
     public void goToTaskCreationActivity(View view) {
         Intent intent = new Intent(this, TaskCreation.class);
-        startActivity(intent);
+        intent.putExtra(NEXT_TASK_ID, tasks.size());
+        startActivityForResult(intent, CREATE_TASK);
+    }
+
+    /**
+     * Callback for the completion of a database SELECT.
+     * @param fetchResults
+     */
+    @Override
+    public void completeFetch(List<Task> fetchResults) {
+        tasks = new ArrayList<>(fetchResults);
+    }
+
+    /**
+     * Callback for the completion of a database INSERT.
+     * @param taskDao
+     */
+    @Override
+    public void completeInsert(TaskDao taskDao) {
+        System.out.println("Inserted new Task into " + taskDao);
+    }
+
+    /**
+     * Callback for the completion of a database DELETE.
+     * @param taskDao
+     */
+    @Override
+    public void completeDelete(TaskDao taskDao) {
+        System.out.println("Deleted Task from " + taskDao);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (resultCode == CREATE_TASK) {
+            if (data != null && data.getExtras() != null && data.getExtras().containsKey(NEW_TASK)) {
+                Task newTask = data.getExtras().getParcelable(NEW_TASK);
+                createTask(newTask);
+            }
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    public void createTask(Task task) {
+        tasks.add(task);
+        System.out.println("Created new Task: " + task);
     }
 
     private void sampleDatabaseProcess() {
@@ -144,6 +203,7 @@ public class TaskListActivity extends AppCompatActivity {
                     Context context = view.getContext();
                     Intent intent = new Intent(context, TaskDetailActivity.class);
                     intent.putExtra(TaskDetailFragment.ARG_ITEM_ID, item.id);
+                    intent.putExtra(TASK_FOR_DETAIL_VIEW, item);
                     context.startActivity(intent);
                 }
 

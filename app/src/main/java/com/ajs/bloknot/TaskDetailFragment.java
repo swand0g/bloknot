@@ -43,7 +43,7 @@ public class TaskDetailFragment extends Fragment {
 
         if (getArguments() != null && getArguments().containsKey(ARG_ITEM_ID)) {
 
-            task = TaskContent.TASK_MAP.get(Objects.requireNonNull(Objects.requireNonNull(getActivity()).getIntent().getExtras()).getInt(ARG_ITEM_ID));
+            task = getActivity().getIntent().getParcelableExtra(TaskListActivity.TASK_FOR_DETAIL_VIEW);
             Activity activity = this.getActivity();
             CollapsingToolbarLayout appBarLayout = activity.findViewById(R.id.toolbar_layout);
             if (appBarLayout != null) {

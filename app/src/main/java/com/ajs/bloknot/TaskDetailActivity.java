@@ -51,13 +51,10 @@ public class TaskDetailActivity extends AppCompatActivity {
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
             Bundle arguments = new Bundle();
-            arguments.putString(ARG_ITEM_ID,
-                    getIntent().getStringExtra(ARG_ITEM_ID));
+            arguments.putString(ARG_ITEM_ID, String.valueOf(getIntent().getIntExtra(ARG_ITEM_ID, -1)));
             TaskDetailFragment fragment = new TaskDetailFragment();
             fragment.setArguments(arguments);
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.item_detail_container, fragment)
-                    .commit();
+            getSupportFragmentManager().beginTransaction().add(R.id.item_detail_container, fragment).commit();
         }
 
     }
@@ -66,13 +63,7 @@ public class TaskDetailActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == android.R.id.home) {
-            // This ID represents the Home or Up button. In the case of this
-            // activity, the Up button is shown. For
-            // more details, see the Navigation pattern on Android Design:
-            //
-            // http://developer.android.com/design/patterns/navigation.html#up-vs-back
-            //
-            navigateUpTo(new Intent(this, TaskListActivity.class));
+            finish();
             return true;
         }
         return super.onOptionsItemSelected(item);

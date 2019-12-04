@@ -1,8 +1,11 @@
 package com.ajs.bloknot;
 
+import android.content.Intent;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
@@ -65,5 +68,23 @@ public class Task implements Parcelable {
             return new Task[size];
         }
     };
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        if (!(obj instanceof Task)) {
+            return false;
+        } else {
+            Task c = (Task) obj;
+            return this.id == c.id;
+        }
+
+
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return "Task: " + id+ " - " + name + " - " + details;
+    }
 
 }

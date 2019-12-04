@@ -13,6 +13,7 @@ import com.ajs.bloknot.database.AppDatabase;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class SplashActivity extends AppCompatActivity {
@@ -35,7 +36,7 @@ public class SplashActivity extends AppCompatActivity {
     protected void transition(List<Task> taskList) {
         Intent intent = new Intent(this, TaskListActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putParcelableArrayList("data", new ArrayList<Parcelable>(taskList));
+        bundle.putParcelableArrayList(TaskListActivity.TASK_LIST, new ArrayList<Parcelable>(taskList));
         intent.putExtras(bundle);
         startActivity(intent);
     }
