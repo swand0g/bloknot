@@ -13,6 +13,7 @@
         android:layout_height="0dp"
         android:gravity="center"
         android:orientation="vertical"
+        android:paddingVertical="3dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -20,33 +21,43 @@
 
         <EditText
             android:id="@+id/task_name_entry"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/linear_layout_element_spacing"
             android:ems="10"
-            android:inputType="textPersonName"
-            android:text="NAME" />
+            android:hint="@string/new_task_name_entry"
+            android:inputType="textPersonName" />
 
         <EditText
             android:id="@+id/date_entry"
-            android:layout_width="match_parent"
+            android:onClick="pickDate"
+            android:focusable="false"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/linear_layout_element_spacing"
             android:ems="10"
+            android:hint="@string/new_task_date_entry"
             android:inputType="date" />
 
         <EditText
             android:id="@+id/time_entry"
-            android:layout_width="match_parent"
+            android:onClick="pickTime"
+            android:focusable="false"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/linear_layout_element_spacing"
             android:ems="10"
+            android:hint="@string/new_task_time_entry"
             android:inputType="time" />
 
         <EditText
             android:id="@+id/details_entry"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/linear_layout_element_spacing"
             android:ems="10"
-            android:inputType="textPersonName"
-            android:text="DETAILS" />
+            android:hint="@string/new_task_details_entry"
+            android:inputType="textPersonName" />
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

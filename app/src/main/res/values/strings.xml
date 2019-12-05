@@ -3,4 +3,8 @@
     <string name="title_item_detail">Item Detail</string>
     <string name="title_activity_task_creation">TaskCreation</string>
     <string name="title_activity_splash">SplashActivity</string>
+    <string name="new_task_name_entry">Name</string>
+    <string name="new_task_date_entry">Date</string>
+    <string name="new_task_time_entry">Time</string>
+    <string name="new_task_details_entry">Details</string>
 </resources>
