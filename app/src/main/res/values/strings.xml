@@ -7,4 +7,5 @@
     <string name="new_task_date_entry">Date</string>
     <string name="new_task_time_entry">Time</string>
     <string name="new_task_details_entry">Details</string>
+    <string name="toggle_theme_menu_item_title">Toggle theme</string>
 </resources>

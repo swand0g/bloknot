@@ -5,6 +5,9 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
@@ -94,6 +97,8 @@ public class TaskListActivity extends AppCompatActivity implements DbFetchInterf
         database = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "db").build();
         dao = database.taskDao();
 
+//        setTheme(R.style.Matrix);
+
     }
 
     @Override
@@ -177,6 +182,17 @@ public class TaskListActivity extends AppCompatActivity implements DbFetchInterf
         tasks.remove(task);
         new DatabaseDelete(this).execute(task);
         System.out.println("Deleted: " + task);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    public void toggleTheme(MenuItem menuItem) {
+
     }
 
     @SuppressWarnings("unused")
