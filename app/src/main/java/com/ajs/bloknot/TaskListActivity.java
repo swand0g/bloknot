@@ -179,6 +179,7 @@ public class TaskListActivity extends AppCompatActivity implements DbFetchInterf
         System.out.println("Deleted: " + task);
     }
 
+    @SuppressWarnings("unused")
     private void sampleDatabaseProcess() {
         AsyncTask.execute(new Runnable() {
             @Override

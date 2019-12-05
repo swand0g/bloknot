@@ -103,7 +103,7 @@ public class TaskCreation extends AppCompatActivity {
 
     public void saveTask(View view) {
         // TODO: Formalize string "nextTaskId"
-        Task newTask = new Task(name_entry.getText().toString(), getNextTaskId(), details_entry.getText().toString(), new Date());
+        Task newTask = new Task(name_entry.getText().toString(), getNextTaskId(), details_entry.getText().toString(), calendar.getTime());
         Intent intent = new Intent();
         intent.putExtra(TaskListActivity.NEW_TASK, newTask);
         setResult(TaskListActivity.CREATE_TASK, intent);

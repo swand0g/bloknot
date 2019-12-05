@@ -84,7 +84,7 @@ public class Task implements Parcelable {
     @NonNull
     @Override
     public String toString() {
-        return "Task: " + id+ " - " + name + " - " + details;
+        return "Task: " + id+ " - " + name + " - " + details + " - " + date;
     }
 
 }
