@@ -1,6 +1,7 @@
 package com.ajs.bloknot;
 
 import android.content.Intent;
+import android.icu.text.SimpleDateFormat;
 import android.os.Bundle;
 
 import androidx.appcompat.widget.Toolbar;
@@ -12,7 +13,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.ActionBar;
 
 import android.view.MenuItem;
+import android.widget.EditText;
 
+import java.util.Locale;
 import java.util.Objects;
 
 import static com.ajs.bloknot.TaskDetailFragment.ARG_ITEM_ID;
@@ -24,6 +27,11 @@ import static com.ajs.bloknot.TaskDetailFragment.ARG_ITEM_ID;
  * in a {@link TaskListActivity}.
  */
 public class TaskDetailActivity extends AppCompatActivity {
+
+    EditText taskDate;
+    EditText taskTime;
+    EditText taskDetails;
+    Task task;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +64,25 @@ public class TaskDetailActivity extends AppCompatActivity {
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction().add(R.id.item_detail_container, fragment).commit();
         }
+
+        // Setup Task data to be displayed
+        task = getIntent().getParcelableExtra(TaskListActivity.TASK_FOR_DETAIL_VIEW);
+        taskDate = findViewById(R.id.taskDateEdit);
+        taskTime = findViewById(R.id.taskTimeEdit);
+        taskDetails = findViewById(R.id.taskDetailsEdit);
+
+        // Set date text
+        String dateFormat = "MM/dd/yy";
+        SimpleDateFormat sdf = new SimpleDateFormat(dateFormat, Locale.US);
+        taskDate.setText(sdf.format(task.date.getTime()));
+
+        // Set time text
+        String timeFormat = "HH:mm";
+        sdf.applyPattern(timeFormat);
+        taskTime.setText(sdf.format(task.date.getTime()));
+
+        // Set detail text
+        taskDetails.setText(task.details);
 
     }
 

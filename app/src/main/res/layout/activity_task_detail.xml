@@ -35,11 +35,65 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.core.widget.NestedScrollView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/item_detail_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <EditText
+            android:id="@+id/taskDateEdit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="100dp"
+            android:layout_marginBottom="31dp"
+            android:background="@android:color/transparent"
+            android:ems="10"
+            android:focusable="false"
+            android:inputType="date"
+            android:textAlignment="center"
+            android:textSize="36sp"
+            app:layout_constraintBottom_toTopOf="@+id/taskTimeEdit"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/taskTimeEdit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="99dp"
+            android:layout_marginTop="31dp"
+            android:layout_marginEnd="99dp"
+            android:background="@android:color/transparent"
+            android:ems="10"
+            android:focusable="false"
+            android:inputType="time"
+            android:textAlignment="center"
+            android:textSize="36sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/taskDateEdit" />
+
+        <EditText
+            android:id="@+id/taskDetailsEdit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="99dp"
+            android:layout_marginTop="138dp"
+            android:layout_marginEnd="99dp"
+            android:layout_marginBottom="327dp"
+            android:background="@android:color/transparent"
+            android:ems="10"
+            android:focusable="false"
+            android:inputType="textPersonName"
+            android:textAlignment="center"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/taskTimeEdit" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/edit_task"

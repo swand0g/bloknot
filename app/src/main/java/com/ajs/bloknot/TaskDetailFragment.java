@@ -54,15 +54,4 @@ public class TaskDetailFragment extends Fragment {
 
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.task_detail, container, false);
-
-        // Show the data details in a TextView.
-        if (task != null) {
-            ((TextView) rootView.findViewById(R.id.item_detail)).setText(task.details);
-        }
-
-        return rootView;
-    }
 }
