@@ -19,8 +19,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
 import com.ajs.bloknot.database.AppDatabase;
+import com.ajs.bloknot.database.DatabaseDelete;
 import com.ajs.bloknot.database.DatabaseDelete.DbDeleteInterface;
 import com.ajs.bloknot.database.DatabaseFetch.DbFetchInterface;
+import com.ajs.bloknot.database.DatabaseInsert;
 import com.ajs.bloknot.database.DatabaseInsert.DbInsertInterface;
 
 import java.util.ArrayList;
@@ -43,10 +45,13 @@ public class TaskListActivity extends AppCompatActivity implements DbFetchInterf
     ArrayList<Task> tasks;
 
     // TODO: Formalize as resource
-    public static final int CREATE_TASK = 0001;
+    public static final int CREATE_TASK = 1;
+    public static final int DELETE_TASK = 2;
+    public static final int VIEW_OR_MODIFY_TASK = 3;
     public static final String TASK_LIST = "taskList";
     public static final String NEXT_TASK_ID = "nextTaskId";
     public static final String NEW_TASK = "newTask";
+    public static final String TASK_FOR_DELETION = "taskForDeletion";
     public static final String TASK_FOR_DETAIL_VIEW = "taskForDetailView";
 
     /**
@@ -94,12 +99,6 @@ public class TaskListActivity extends AppCompatActivity implements DbFetchInterf
     @Override
     protected void onResume() {
         super.onResume();
-        System.out.println("OUTPUTTING AFTER RESUME");
-        for (Task t: tasks) {
-            System.out.println(t);
-        }
-        System.out.println("DONE WITH OUTPUTTING AFTER RESUME");
-        recyclerViewAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -148,18 +147,36 @@ public class TaskListActivity extends AppCompatActivity implements DbFetchInterf
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (resultCode == CREATE_TASK) {
-            if (data != null && data.getExtras() != null && data.getExtras().containsKey(NEW_TASK)) {
-                Task newTask = data.getExtras().getParcelable(NEW_TASK);
-                createTask(newTask);
+
+        if (data != null && data.getExtras() != null) {
+            switch (resultCode) {
+                case CREATE_TASK:
+                    if (data.getExtras().containsKey(NEW_TASK)) {
+                        Task newTask = data.getExtras().getParcelable(NEW_TASK);
+                        createTask(newTask);
+                    }
+                case DELETE_TASK:
+                    if (data.getExtras().containsKey(TASK_FOR_DELETION)) {
+                        Task taskForDeletion = data.getExtras().getParcelable(TASK_FOR_DELETION);
+                        deleteTask(taskForDeletion);
+                    }
             }
-            super.onActivityResult(requestCode, resultCode, data);
+            recyclerViewAdapter.notifyDataSetChanged();
         }
+        super.onActivityResult(requestCode, resultCode, data);
+
     }
 
     public void createTask(Task task) {
         tasks.add(task);
+        new DatabaseInsert(this).execute(task);
         System.out.println("Created new Task: " + task);
+    }
+
+    public void deleteTask(Task task) {
+        tasks.remove(task);
+        new DatabaseDelete(this).execute(task);
+        System.out.println("Deleted: " + task);
     }
 
     private void sampleDatabaseProcess() {
@@ -187,7 +204,7 @@ public class TaskListActivity extends AppCompatActivity implements DbFetchInterf
         // Boolean indicating if the screen size is large enough for a two-pane system.
         private final boolean mTwoPane;
 
-        private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
+        private final View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Task item = (Task) view.getTag();
@@ -204,7 +221,7 @@ public class TaskListActivity extends AppCompatActivity implements DbFetchInterf
                     Intent intent = new Intent(context, TaskDetailActivity.class);
                     intent.putExtra(TaskDetailFragment.ARG_ITEM_ID, item.id);
                     intent.putExtra(TASK_FOR_DETAIL_VIEW, item);
-                    context.startActivity(intent);
+                    parentActivity.startActivityForResult(intent, VIEW_OR_MODIFY_TASK);
                 }
 
 
@@ -232,12 +249,10 @@ public class TaskListActivity extends AppCompatActivity implements DbFetchInterf
 
         @Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
-
             holder.idView.setText(String.valueOf(values.get(position).id));
             holder.contentView.setText(values.get(position).name);
             holder.itemView.setTag(values.get(position));
-            holder.itemView.setOnClickListener(mOnClickListener);
-
+            holder.itemView.setOnClickListener(onClickListener);
         }
 
         @Override
@@ -246,9 +261,14 @@ public class TaskListActivity extends AppCompatActivity implements DbFetchInterf
         }
 
         public void removeAt(int position) {
-            values.remove(position);
+
+            // Delete from main database
+            parentActivity.deleteTask(values.get(position));
+
+            // Update UI
             notifyItemRemoved(position);
             notifyItemRangeChanged(position, values.size());
+
         }
 
         class ViewHolder extends RecyclerView.ViewHolder {

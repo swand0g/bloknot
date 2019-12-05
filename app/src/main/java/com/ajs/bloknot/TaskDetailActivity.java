@@ -69,9 +69,12 @@ public class TaskDetailActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void completeTask(View view) {
-        Log.i(this.toString(), "This button is not yet implemented.");
-        int task_id = Objects.requireNonNull(getIntent().getExtras()).getInt(ARG_ITEM_ID);
+    public void deleteTask(View view) {
+        Task taskToDelete = getIntent().getParcelableExtra(TaskListActivity.TASK_FOR_DETAIL_VIEW);
+        Intent intent = new Intent();
+        intent.putExtra(TaskListActivity.TASK_FOR_DELETION, taskToDelete);
+        setResult(TaskListActivity.DELETE_TASK, intent);
+        finish();
     }
 
     public void editTask(View view) {

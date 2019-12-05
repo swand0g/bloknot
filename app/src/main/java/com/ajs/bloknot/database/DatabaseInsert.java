@@ -19,6 +19,7 @@ public class DatabaseInsert extends AsyncTask<Task, Void, TaskDao> {
 
     public DatabaseInsert(TaskListActivity context) {
         weakReference = new WeakReference<>(context);
+        delegate = weakReference.get();
     }
 
     @Override
