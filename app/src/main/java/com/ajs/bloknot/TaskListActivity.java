@@ -19,6 +19,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Database;
 import androidx.room.Room;
 
 import com.ajs.bloknot.database.AppDatabase;
@@ -46,15 +47,17 @@ public class TaskListActivity extends AppCompatActivity implements DbFetchInterf
     AppDatabase database;
     SimpleItemRecyclerViewAdapter recyclerViewAdapter;
     ArrayList<Task> tasks;
+    Bundle savedInstanceState;
+    public static int theme = R.style.Matrix;
 
     // TODO: Formalize as resource
     public static final int CREATE_TASK = 1;
-    public static final int DELETE_TASK = 2;
+    public static final int UPDATE_TASK = 2;
     public static final int VIEW_OR_MODIFY_TASK = 3;
     public static final String TASK_LIST = "taskList";
     public static final String NEXT_TASK_ID = "nextTaskId";
     public static final String NEW_TASK = "newTask";
-    public static final String TASK_FOR_DELETION = "taskForDeletion";
+    public static final String TASK_FOR_UPDATE = "taskForDeletion";
     public static final String TASK_FOR_DETAIL_VIEW = "taskForDetailView";
 
     /**
@@ -65,6 +68,12 @@ public class TaskListActivity extends AppCompatActivity implements DbFetchInterf
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        if (getIntent().getExtras().containsKey("THEME")) {
+            theme = getIntent().getExtras().getInt("THEME");
+            setTheme(theme);
+        }
+        this.savedInstanceState = savedInstanceState;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_list);
 
@@ -97,7 +106,6 @@ public class TaskListActivity extends AppCompatActivity implements DbFetchInterf
         database = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "db").build();
         dao = database.taskDao();
 
-//        setTheme(R.style.Matrix);
 
     }
 
@@ -160,10 +168,10 @@ public class TaskListActivity extends AppCompatActivity implements DbFetchInterf
                         Task newTask = data.getExtras().getParcelable(NEW_TASK);
                         createTask(newTask);
                     }
-                case DELETE_TASK:
-                    if (data.getExtras().containsKey(TASK_FOR_DELETION)) {
-                        Task taskForDeletion = data.getExtras().getParcelable(TASK_FOR_DELETION);
-                        deleteTask(taskForDeletion);
+                case UPDATE_TASK:
+                    if (data.getExtras().containsKey(TASK_FOR_UPDATE)) {
+                        Task taskForUpdate = data.getExtras().getParcelable(TASK_FOR_UPDATE);
+                        updateTask(taskForUpdate);
                     }
             }
             recyclerViewAdapter.notifyDataSetChanged();
@@ -184,6 +192,11 @@ public class TaskListActivity extends AppCompatActivity implements DbFetchInterf
         System.out.println("Deleted: " + task);
     }
 
+    private void updateTask(Task task) {
+        deleteTask(task);
+        createTask(task);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -192,7 +205,15 @@ public class TaskListActivity extends AppCompatActivity implements DbFetchInterf
     }
 
     public void toggleTheme(MenuItem menuItem) {
-
+        if (theme == R.style.Matrix) {
+            theme = R.style.Aether;
+        } else {
+            theme = R.style.Matrix;
+        }
+        Intent intent = getIntent();
+        intent.putExtra("THEME", theme);
+        finish();
+        startActivity(intent);
     }
 
     @SuppressWarnings("unused")

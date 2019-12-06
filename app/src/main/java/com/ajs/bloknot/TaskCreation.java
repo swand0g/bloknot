@@ -32,6 +32,7 @@ public class TaskCreation extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
+        setTheme(TaskListActivity.theme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_creation);
         Toolbar toolbar = findViewById(R.id.toolbar);

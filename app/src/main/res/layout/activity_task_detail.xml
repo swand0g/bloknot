@@ -43,13 +43,13 @@
 
         <EditText
             android:id="@+id/taskDateEdit"
+            android:onClick="modifyDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="100dp"
             android:layout_marginBottom="31dp"
             android:background="@android:color/transparent"
             android:ems="10"
-            android:focusable="false"
             android:inputType="date"
             android:textAlignment="center"
             android:textSize="36sp"
@@ -60,6 +60,7 @@
 
         <EditText
             android:id="@+id/taskTimeEdit"
+            android:onClick="modifyTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="99dp"
@@ -67,7 +68,6 @@
             android:layout_marginEnd="99dp"
             android:background="@android:color/transparent"
             android:ems="10"
-            android:focusable="false"
             android:inputType="time"
             android:textAlignment="center"
             android:textSize="36sp"
@@ -85,7 +85,6 @@
             android:layout_marginBottom="327dp"
             android:background="@android:color/transparent"
             android:ems="10"
-            android:focusable="false"
             android:inputType="textPersonName"
             android:textAlignment="center"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -97,6 +96,7 @@
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/edit_task"
+        android:onClick="editTask"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="10dp"

@@ -19,6 +19,7 @@ public class DatabaseFetch extends AsyncTask<Integer, Integer, List<Task>> {
 
     public DatabaseFetch(TaskListActivity context) {
         weakReference = new WeakReference<>(context);
+        delegate = weakReference.get();
     }
 
     @Override

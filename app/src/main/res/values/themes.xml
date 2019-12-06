@@ -9,7 +9,8 @@
         <item name="android:textColor">@color/matrix_text_color</item>
         <item name="android:windowBackground">@color/matrix_color_primary</item>
         <item name="android:buttonTint">@color/matrix_text_color</item>
-        <item name="editTextStyle">@color/matrix_text_color</item>
+        <item name="android:editTextColor">@color/matrix_text_color</item>
+        <item name="android:textColorHint">@color/matrix_text_color</item>
     </style>
     
     <style name="Aether" parent="AppTheme.NoActionBar">
@@ -19,7 +20,8 @@
         <item name="android:textColor">@color/aether_text_color</item>
         <item name="android:windowBackground">@color/aether_color_primary</item>
         <item name="android:buttonTint">@color/aether_text_color</item>
-        <item name="editTextStyle">@color/aether_text_color</item>
+        <item name="android:textColorHint">@color/aether_text_color</item>
+        <item name="android:editTextColor">@color/aether_text_color</item>
     </style>
 
 </resources>

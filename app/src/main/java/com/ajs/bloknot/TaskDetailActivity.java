@@ -1,22 +1,25 @@
 package com.ajs.bloknot;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.icu.text.SimpleDateFormat;
 import android.os.Bundle;
 
 import androidx.appcompat.widget.Toolbar;
 
-import android.util.Log;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.ActionBar;
 
 import android.view.MenuItem;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TimePicker;
 
+import java.util.Calendar;
 import java.util.Locale;
-import java.util.Objects;
 
 import static com.ajs.bloknot.TaskDetailFragment.ARG_ITEM_ID;
 
@@ -32,9 +35,15 @@ public class TaskDetailActivity extends AppCompatActivity {
     EditText taskTime;
     EditText taskDetails;
     Task task;
+    Calendar calendar = Calendar.getInstance();
+    DatePickerDialog.OnDateSetListener dateSetListener;
+    TimePickerDialog.OnTimeSetListener timeSetListener;
+    Boolean didModifyTask = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        setTheme(TaskListActivity.theme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_detail);
         Toolbar toolbar = findViewById(R.id.detail_toolbar);
@@ -70,6 +79,9 @@ public class TaskDetailActivity extends AppCompatActivity {
         taskDate = findViewById(R.id.taskDateEdit);
         taskTime = findViewById(R.id.taskTimeEdit);
         taskDetails = findViewById(R.id.taskDetailsEdit);
+        taskDate.setEnabled(false);
+        taskTime.setEnabled(false);
+        taskDetails.setEnabled(false);
 
         // Set date text
         String dateFormat = "MM/dd/yy";
@@ -81,6 +93,25 @@ public class TaskDetailActivity extends AppCompatActivity {
         sdf.applyPattern(timeFormat);
         taskTime.setText(sdf.format(task.date.getTime()));
 
+        // Define date and time pickers
+        dateSetListener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                calendar.set(Calendar.YEAR, year);
+                calendar.set(Calendar.MONTH, monthOfYear);
+                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                updateDateLabel();
+            }
+        };
+        timeSetListener = new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                calendar.set(Calendar.MINUTE, minute);
+                updateTimeLabel();
+            }
+        };
+
         // Set detail text
         taskDetails.setText(task.details);
 
@@ -90,22 +121,56 @@ public class TaskDetailActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == android.R.id.home) {
+            if (didModifyTask) {
+                task.date = calendar.getTime();
+                task.details = taskDetails.getText().toString();
+                Intent intent = new Intent();
+                intent.putExtra(TaskListActivity.TASK_FOR_UPDATE, task);
+                setResult(TaskListActivity.UPDATE_TASK, intent);
+            }
             finish();
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    public void deleteTask(View view) {
-        Task taskToDelete = getIntent().getParcelableExtra(TaskListActivity.TASK_FOR_DETAIL_VIEW);
-        Intent intent = new Intent();
-        intent.putExtra(TaskListActivity.TASK_FOR_DELETION, taskToDelete);
-        setResult(TaskListActivity.DELETE_TASK, intent);
-        finish();
+    public void editTask(View view) {
+        taskDate.setEnabled(true);
+        taskTime.setEnabled(true);
+        taskDetails.setEnabled(true);
+        didModifyTask = true;
     }
 
-    public void editTask(View view) {
-        Log.i(this.toString(), "This button is not yet implemented.");
+    public void modifyDate(View view) {
+        new DatePickerDialog(
+                TaskDetailActivity.this,
+                dateSetListener,
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)
+        ).show();
+    }
+
+    private void updateDateLabel() {
+        String format = "MM/dd/yy";
+        SimpleDateFormat sdf = new SimpleDateFormat(format, Locale.US);
+        taskDate.setText(sdf.format(calendar.getTime()));
+    }
+
+    public void modifyTime(View view) {
+        new TimePickerDialog(
+                this,
+                timeSetListener,
+                calendar.get(Calendar.HOUR_OF_DAY),
+                calendar.get(Calendar.MINUTE),
+                true
+        ).show();
+    }
+
+    private void updateTimeLabel() {
+        String format = "HH:mm";
+        SimpleDateFormat sdf = new SimpleDateFormat(format, Locale.US);
+        taskTime.setText(sdf.format(calendar.getTime()));
     }
 
 }

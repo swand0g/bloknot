@@ -19,6 +19,7 @@ public class DatabaseDelete extends AsyncTask<Task, Void, TaskDao> {
 
     public DatabaseDelete(TaskListActivity context) {
         weakReference = new WeakReference<>(context);
+        delegate = weakReference.get();
     }
 
     @Override

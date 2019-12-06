@@ -39,6 +39,7 @@ public class SplashActivity extends AppCompatActivity {
         bundle.putParcelableArrayList(TaskListActivity.TASK_LIST, new ArrayList<Parcelable>(taskList));
         intent.putExtras(bundle);
         startActivity(intent);
+        finish();
     }
 
     private static class DatabaseLoad extends AsyncTask<TaskDao, Void, List<Task>> {
