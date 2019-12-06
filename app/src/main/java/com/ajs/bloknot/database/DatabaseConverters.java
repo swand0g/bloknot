@@ -4,6 +4,9 @@ import androidx.room.TypeConverter;
 
 import java.util.Date;
 
+/**
+ * A class of converters for Date objects in the database.
+ */
 public class DatabaseConverters {
 
     @TypeConverter

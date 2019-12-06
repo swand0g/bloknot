@@ -122,9 +122,7 @@ public class TaskDetailActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
 
         int id = item.getItemId();
-
         if (id == android.R.id.home) {
-
             // Save new properties if Task was edited
             if (didModifyTask) {
                 task.date = calendar.getTime();

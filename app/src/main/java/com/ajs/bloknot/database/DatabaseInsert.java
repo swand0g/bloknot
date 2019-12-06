@@ -8,12 +8,18 @@ import com.ajs.bloknot.TaskListActivity;
 
 import java.lang.ref.WeakReference;
 
+/**
+ * A simple implementation for quick and seamless insertion of database objects.
+ */
 public class DatabaseInsert extends AsyncTask<Task, Void, TaskDao> {
 
+    /**
+     * Interface to interpret this AsyncTask's completion from an object that uses it
+     */
     public interface DbInsertInterface {
         void completeInsert(TaskDao taskDao);
     }
-    public DbInsertInterface delegate = null;
+    private DbInsertInterface delegate = null;
 
     private WeakReference<TaskListActivity > weakReference;
 
@@ -22,6 +28,9 @@ public class DatabaseInsert extends AsyncTask<Task, Void, TaskDao> {
         delegate = weakReference.get();
     }
 
+    /**
+     * Inserts @tasks into the application database
+     */
     @Override
     protected TaskDao doInBackground(Task... tasks) {
         weakReference.get().dao.insertAll(tasks);

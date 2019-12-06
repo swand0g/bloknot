@@ -8,12 +8,18 @@ import com.ajs.bloknot.TaskListActivity;
 import java.lang.ref.WeakReference;
 import java.util.List;
 
+/**
+ * A simple implementation for quick and seamless fetching of database objects.
+ */
 public class DatabaseFetch extends AsyncTask<Integer, Integer, List<Task>> {
 
+    /**
+     * Interface to interpret this AsyncTask's completion from an object that uses it
+     */
     public interface DbFetchInterface {
         void completeFetch(List<Task> fetchResults);
     }
-    public DbFetchInterface delegate = null;
+    private DbFetchInterface delegate = null;
 
     private WeakReference<TaskListActivity> weakReference;
 
@@ -22,6 +28,9 @@ public class DatabaseFetch extends AsyncTask<Integer, Integer, List<Task>> {
         delegate = weakReference.get();
     }
 
+    /**
+     * Fetches all Task objects from the application database
+     */
     @Override
     protected List<Task> doInBackground(Integer... integers) {
         List<Task> tasks;
