@@ -43,6 +43,7 @@
 
         <EditText
             android:id="@+id/taskDateEdit"
+            android:focusable="false"
             android:onClick="modifyDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -60,6 +61,7 @@
 
         <EditText
             android:id="@+id/taskTimeEdit"
+            android:focusable="false"
             android:onClick="modifyTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

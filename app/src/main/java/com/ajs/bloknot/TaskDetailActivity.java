@@ -119,24 +119,34 @@ public class TaskDetailActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onBackPressed() {
+        checkForUpdate();
+        finish();
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
         int id = item.getItemId();
         if (id == android.R.id.home) {
-            // Save new properties if Task was edited
-            if (didModifyTask) {
-                task.date = calendar.getTime();
-                task.details = taskDetails.getText().toString();
-                Intent intent = new Intent();
-                intent.putExtra(TaskListActivity.TASK_FOR_UPDATE, task);
-                setResult(TaskListActivity.UPDATE_TASK, intent);
-            }
+            checkForUpdate();
             finish();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
 
+    }
+
+    private void checkForUpdate() {
+        // Save new properties if Task was edited
+        if (didModifyTask) {
+            task.date = calendar.getTime();
+            task.details = taskDetails.getText().toString();
+            Intent intent = new Intent();
+            intent.putExtra(TaskListActivity.TASK_FOR_UPDATE, task);
+            setResult(TaskListActivity.UPDATE_TASK, intent);
+        }
     }
 
     /**
