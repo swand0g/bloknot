@@ -1,6 +1,5 @@
 package com.ajs.bloknot;
 
-import android.content.Intent;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -13,7 +12,10 @@ import androidx.room.PrimaryKey;
 
 import java.util.Date;
 
-@SuppressWarnings("WeakerAccess")
+/**
+ * A Task is a representation of something the User must finish. The application user can track a
+ * Task's Date and Time, as well as provide some informative details.
+ */
 @Entity(tableName = "tasks")
 public class Task implements Parcelable {
 
@@ -24,7 +26,7 @@ public class Task implements Parcelable {
     public String name;
 
     @ColumnInfo(name = "details")
-    public String details;
+    String details;
 
     @ColumnInfo(name = "date")
     public Date date;

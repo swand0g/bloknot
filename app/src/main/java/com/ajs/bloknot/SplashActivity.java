@@ -16,6 +16,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * This activity loads all initial data for the application.
+ */
 public class SplashActivity extends AppCompatActivity {
 
     @Override
@@ -33,6 +36,9 @@ public class SplashActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Transitions to Application
+     */
     protected void transition(List<Task> taskList) {
         Intent intent = new Intent(this, TaskListActivity.class);
         Bundle bundle = new Bundle();
@@ -42,6 +48,9 @@ public class SplashActivity extends AppCompatActivity {
         finish();
     }
 
+    /**
+     * Asynchronous task that loads the database.
+     */
     private static class DatabaseLoad extends AsyncTask<TaskDao, Void, List<Task>> {
 
         private WeakReference<SplashActivity> weakReference;

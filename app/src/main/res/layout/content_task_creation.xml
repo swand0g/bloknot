@@ -30,7 +30,7 @@
 
         <EditText
             android:id="@+id/date_entry"
-            android:onClick="modifyDate"
+            android:onClick="pickDate"
             android:focusable="false"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -41,7 +41,7 @@
 
         <EditText
             android:id="@+id/time_entry"
-            android:onClick="modifyTime"
+            android:onClick="pickTime"
             android:focusable="false"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

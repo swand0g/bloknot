@@ -2,7 +2,6 @@ package com.ajs.bloknot;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -29,7 +28,6 @@ import com.ajs.bloknot.database.DatabaseInsert;
 import com.ajs.bloknot.database.DatabaseInsert.DbInsertInterface;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -95,6 +93,9 @@ public class TaskListActivity extends AppCompatActivity implements DbFetchInterf
         } else {
             tasks = new ArrayList<>();
         }
+        if (getIntent().getExtras().containsKey(TASK_LIST)) {
+            tasks = getIntent().getParcelableArrayListExtra(TASK_LIST);
+        }
 
         // Setup RecyclerView.
         View recyclerView = findViewById(R.id.item_list);
@@ -123,6 +124,9 @@ public class TaskListActivity extends AppCompatActivity implements DbFetchInterf
         recyclerView.setAdapter(recyclerViewAdapter);
     }
 
+    /**
+     * Transitions App into the activity for the creation of new Tasks
+     */
     public void goToTaskCreationActivity(View view) {
         Intent intent = new Intent(this, TaskCreation.class);
         intent.putExtra(NEXT_TASK_ID, tasks.size());
@@ -175,12 +179,18 @@ public class TaskListActivity extends AppCompatActivity implements DbFetchInterf
 
     }
 
+    /**
+     * Insert a new Task into the database
+     */
     public void createTask(Task task) {
         tasks.add(task);
         new DatabaseInsert(this).execute(task);
         System.out.println("Created new Task: " + task);
     }
 
+    /**
+     * Delete a Task from the database
+     */
     public void deleteTask(Task task) {
         tasks.remove(task);
         new DatabaseDelete(this).execute(task);
@@ -188,7 +198,7 @@ public class TaskListActivity extends AppCompatActivity implements DbFetchInterf
     }
 
     /**
-     * Updates the Task by removing and re-inserting.
+     * Updates the Task by removing and re-inserting
      */
     private void updateTask(Task task) {
         deleteTask(task);
@@ -203,22 +213,30 @@ public class TaskListActivity extends AppCompatActivity implements DbFetchInterf
     }
 
     /**
-     * OnClick for the Menu, allows toggling of the theme. The two options are Matrix and Aether.
-     * @param menuItem
+     * OnClick for the Menu, allows toggling of the theme. The two options are Matrix and Aether
      */
     public void toggleTheme(MenuItem menuItem) {
+
+        // Toggle the theme
         if (theme == R.style.Matrix) {
             theme = R.style.Aether;
         } else {
             theme = R.style.Matrix;
         }
+
+        // Restart the Application, sending the correct Task list so that it is not loaded from the
+        // older SplashScreen's delivered data.
         Intent intent = getIntent();
         intent.putExtra(THEME, theme);
+        intent.putParcelableArrayListExtra(TASK_LIST, tasks);
         finish();
         startActivity(intent);
+
     }
 
-    @SuppressWarnings("JavaDoc")
+    /**
+     * Custom implementation of RecyclerView
+     */
     public static class SimpleItemRecyclerViewAdapter extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
 
         private final TaskListActivity parentActivity;
@@ -282,7 +300,10 @@ public class TaskListActivity extends AppCompatActivity implements DbFetchInterf
             return values.size();
         }
 
-        public void removeAt(int position) {
+        /**
+         * Delete a Task
+         */
+        void removeAt(int position) {
 
             // Delete from main database
             parentActivity.deleteTask(values.get(position));
@@ -293,6 +314,9 @@ public class TaskListActivity extends AppCompatActivity implements DbFetchInterf
 
         }
 
+        /**
+         * Functionality for CheckBox that allows removal of Tasks
+         */
         class ViewHolder extends RecyclerView.ViewHolder {
 
             final TextView idView;

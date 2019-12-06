@@ -8,6 +8,9 @@ import androidx.room.Update;
 
 import java.util.List;
 
+/**
+ * The DAO for a Task database.
+ */
 @Dao
 public interface TaskDao {
 

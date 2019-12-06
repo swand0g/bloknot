@@ -21,11 +21,12 @@ import java.util.Objects;
  * on handsets.
  */
 public class TaskDetailFragment extends Fragment {
+
     /**
      * The fragment argument representing the item ID that this fragment
      * represents.
      */
-    public static final String ARG_ITEM_ID = "item_id";
+    static final String ARG_ITEM_ID = "item_id";
 
     private Task task;
 
@@ -33,8 +34,7 @@ public class TaskDetailFragment extends Fragment {
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public TaskDetailFragment() {
-    }
+    public TaskDetailFragment() {}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -43,6 +43,7 @@ public class TaskDetailFragment extends Fragment {
 
         if (getArguments() != null && getArguments().containsKey(ARG_ITEM_ID)) {
 
+            // Get this Fragment's respective Task to display details to the UI
             task = getActivity().getIntent().getParcelableExtra(TaskListActivity.TASK_FOR_DETAIL_VIEW);
             Activity activity = this.getActivity();
             CollapsingToolbarLayout appBarLayout = activity.findViewById(R.id.toolbar_layout);

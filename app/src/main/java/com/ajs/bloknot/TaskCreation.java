@@ -32,17 +32,20 @@ public class TaskCreation extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
+        // Setup
         setTheme(TaskListActivity.theme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_creation);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        // Fetch objects
         nameEntry = findViewById(R.id.task_name_entry);
         detailsEntry = findViewById(R.id.details_entry);
         dateEntry = findViewById(R.id.date_entry);
         timeEntry = findViewById(R.id.time_entry);
 
+        // Define Date and Time pickers
         dateSetListener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
@@ -52,7 +55,6 @@ public class TaskCreation extends AppCompatActivity {
                 updateDateLabel();
             }
         };
-
         timeSetListener = new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
@@ -64,6 +66,9 @@ public class TaskCreation extends AppCompatActivity {
 
     }
 
+    /**
+     * Onclick method to show the Date picker
+     */
     public void pickDate(View view) {
         new DatePickerDialog(
                 TaskCreation.this,
@@ -74,12 +79,18 @@ public class TaskCreation extends AppCompatActivity {
         ).show();
     }
 
+    /**
+     * Updates the EditText to show the most recently picked Date
+     */
     private void updateDateLabel() {
         String format = "MM/dd/yy";
         SimpleDateFormat sdf = new SimpleDateFormat(format, Locale.US);
         dateEntry.setText(sdf.format(calendar.getTime()));
     }
 
+    /**
+     * Onclick method to show the Time picker
+     */
     public void pickTime(View view) {
         new TimePickerDialog(
                 this,
@@ -90,6 +101,9 @@ public class TaskCreation extends AppCompatActivity {
         ).show();
     }
 
+    /**
+     * Updates the EditText to show the most recently picked Time
+     */
     private void updateTimeLabel() {
         String format = "HH:mm";
         SimpleDateFormat sdf = new SimpleDateFormat(format, Locale.US);
@@ -101,21 +115,21 @@ public class TaskCreation extends AppCompatActivity {
         super.onResume();
     }
 
+    /**
+     * Closure method to deliver Task to be created back to TaskListActivity
+     */
     public void saveTask(View view) {
-        // TODO: Formalize string "nextTaskId"
         Task newTask = new Task(nameEntry.getText().toString(), getNextTaskId(), detailsEntry.getText().toString(), calendar.getTime());
         Intent intent = new Intent();
         intent.putExtra(TaskListActivity.NEW_TASK, newTask);
         setResult(TaskListActivity.CREATE_TASK, intent);
-        closeThis();
-    }
-
-    private void closeThis() {
         finish();
     }
 
+    /**
+     * Returns the next unused id for a new Task
+     */
     private int getNextTaskId() {
-        // Get Task data
         return getIntent().getIntExtra(TaskListActivity.NEXT_TASK_ID, -1);
     }
 

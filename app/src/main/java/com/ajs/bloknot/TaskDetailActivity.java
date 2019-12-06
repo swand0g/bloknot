@@ -43,6 +43,7 @@ public class TaskDetailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
+        // Setup
         setTheme(TaskListActivity.theme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_detail);
@@ -93,7 +94,7 @@ public class TaskDetailActivity extends AppCompatActivity {
         sdf.applyPattern(timeFormat);
         taskTime.setText(sdf.format(task.date.getTime()));
 
-        // Define date and time pickers
+        // Define Date and Time pickers
         dateSetListener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
@@ -119,8 +120,12 @@ public class TaskDetailActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
         int id = item.getItemId();
+
         if (id == android.R.id.home) {
+
+            // Save new properties if Task was edited
             if (didModifyTask) {
                 task.date = calendar.getTime();
                 task.details = taskDetails.getText().toString();
@@ -131,9 +136,14 @@ public class TaskDetailActivity extends AppCompatActivity {
             finish();
             return true;
         }
+
         return super.onOptionsItemSelected(item);
+
     }
 
+    /**
+     * Enables the editing of this View's Task's properties
+     */
     public void editTask(View view) {
         taskDate.setEnabled(true);
         taskTime.setEnabled(true);
@@ -141,6 +151,9 @@ public class TaskDetailActivity extends AppCompatActivity {
         didModifyTask = true;
     }
 
+    /**
+     * Onclick method to show the Date picker
+     */
     public void modifyDate(View view) {
         new DatePickerDialog(
                 TaskDetailActivity.this,
@@ -151,12 +164,18 @@ public class TaskDetailActivity extends AppCompatActivity {
         ).show();
     }
 
+    /**
+     * Updates the EditText to show the most recently picked Date
+     */
     private void updateDateLabel() {
         String format = "MM/dd/yy";
         SimpleDateFormat sdf = new SimpleDateFormat(format, Locale.US);
         taskDate.setText(sdf.format(calendar.getTime()));
     }
 
+    /**
+     * Onclick method to show the Time picker
+     */
     public void modifyTime(View view) {
         new TimePickerDialog(
                 this,
@@ -167,6 +186,9 @@ public class TaskDetailActivity extends AppCompatActivity {
         ).show();
     }
 
+    /**
+     * Updates the EditText to show the most recently picked Time
+     */
     private void updateTimeLabel() {
         String format = "HH:mm";
         SimpleDateFormat sdf = new SimpleDateFormat(format, Locale.US);

@@ -2,6 +2,7 @@
 
 <resources>
 
+    <!--  The dark theme: Matrix  -->
     <style name="Matrix" parent="AppTheme.NoActionBar">
         <item name="colorPrimaryDark">@color/matrix_color_accent</item>
         <item name="colorPrimary">@color/matrix_color_accent</item>
@@ -12,7 +13,8 @@
         <item name="android:editTextColor">@color/matrix_text_color</item>
         <item name="android:textColorHint">@color/matrix_text_color</item>
     </style>
-    
+
+    <!--  The light theme: Aether -->
     <style name="Aether" parent="AppTheme.NoActionBar">
         <item name="colorPrimaryDark">@color/aether_color_accent</item>
         <item name="colorPrimary">@color/aether_color_accent</item>
